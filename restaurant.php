@@ -95,7 +95,8 @@ $page = $_GET['page'] ?? 'orders';
         <td>₱<?= number_format($order['price'] * $order['quantity'], 2); ?></td>
         <td><?= date("M d, H:i", strtotime($order['order_date'])); ?></td>
         <td>
-            <a href="deleterestau.php?id=<?= $order['order_id']; ?>" class="btn btn-sm btn-danger">X</a>
+            <a href="updaterestau.php?type=order&id=<?= $order['order_id'] ?>" class="btn btn-warning btn-sm">Edit</a> |
+            <a href="deleterestau.php?type=order&id=<?= $order['order_id'] ?>" class="btn btn-danger btn-sm">Delete</a>
         </td>
     </tr>
     <?php endforeach; ?>
@@ -132,6 +133,7 @@ $page = $_GET['page'] ?? 'orders';
         <th>First Name</th>
         <th>Last Name</th>
         <th>Phone</th>
+        <th>Action</th>
         </tr>
 </thead>
 <tbody>
@@ -141,6 +143,10 @@ $page = $_GET['page'] ?? 'orders';
         <td><?= $customer['first_name']; ?></td>
         <td><?= $customer['last_name']; ?></td>
         <td><?= $customer['phone_number']; ?></td>
+        <td>
+            <a href="updaterestau.php?type=customer&id=<?= $customer['customer_id'] ?>" class="btn btn-warning btn-sm">Edit</a> |
+            <a href="deleterestau.php?type=customer&id=<?= $customer['customer_id'] ?>" class="btn btn-danger btn-sm">Delete</a>
+        </td>
     </tr>
     <?php endforeach; ?>
 </tbody>
@@ -176,15 +182,20 @@ $page = $_GET['page'] ?? 'orders';
         <th>Dish Name</th>
         <th>Price</th>
         <th>Category</th>
+        <th>Action</th>
     </tr>
     </thead>
     <tbody>
     <?php foreach($menuitems as $item): ?>
     <tr>
-        <td><?= $item['item_id']; ?></td>
+        <td>#<?= $item['item_id']; ?></td>
         <td><?= $item['dish_name']; ?></td>
         <td>₱<?= number_format($item['price'], 2); ?></td>
         <td><?= $item['category'];?></td>
+        <td>
+            <a href="updaterestau.php?type=menuitem&id=<?= $item['item_id'] ?>" class="btn btn-warning btn-sm">Edit</a> |
+            <a href="deleterestau.php?type=menuitem&id=<?= $item['item_id'] ?>" class="btn btn-danger btn-sm">Delete</a>
+        </td>
     </tr>
     <?php endforeach; ?>
     </tbody>
