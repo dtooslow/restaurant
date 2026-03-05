@@ -1,8 +1,8 @@
 <?php
-require 'insert.php';
-require 'update.php';
-require 'delete.php';
-require 'select.php';
+require 'insertrestau.php';
+require 'updaterestau.php';
+require 'deleterestau.php';
+require 'selectrestau.php';
 
 $page = $_GET['page'] ?? 'orders';
 ?>
