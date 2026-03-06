@@ -95,7 +95,6 @@ $page = $_GET['page'] ?? 'orders';
         <td>₱<?= number_format($order['price'] * $order['quantity'], 2); ?></td>
         <td><?= date("M d, H:i", strtotime($order['order_date'])); ?></td>
         <td>
-            <a href="updaterestau.php?type=order&id=<?= $order['order_id'] ?>" class="btn btn-warning btn-sm">Edit</a> |
             <a href="deleterestau.php?type=order&id=<?= $order['order_id'] ?>" class="btn btn-danger btn-sm">Delete</a>
         </td>
     </tr>
@@ -105,23 +104,48 @@ $page = $_GET['page'] ?? 'orders';
 
 <?php elseif($page == 'customers'): ?>
 
-<h4 class="mb-4">Add Customer</h4>
-<form method="POST" action="insertrestau.php" class="row g-3 align-items-end">
+<?php
+$editing = isset($_GET['edit']) ? true : false;
+$customer_to_edit = null;
+
+if($editing && isset($_GET['id'])) {
+    foreach($customers as $cust) {
+        if($cust['customer_id'] == $_GET['id']) {
+            $customer_to_edit = $cust;
+            break;
+        }
+    }
+}
+?>
+
+<h4 class="mb-4"><?= $editing ? 'Edit Customer' : 'Add Customer' ?></h4>
+<form method="POST" action="<?= $editing ? 'updaterestau.php' : 'insertrestau.php' ?>" class="row g-3 align-items-end">
+    <?php if($editing && $customer_to_edit): ?>
+        <input type="hidden" name="customer_id" value="<?= $customer_to_edit['customer_id'] ?>">
+    <?php endif; ?>
+    
     <div class="col-md-3">
         <label class="form-label">First Name</label>
-        <input type="text" name="first_name" class="form-control" required>
+        <input type="text" name="first_name" class="form-control" value="<?= $editing && $customer_to_edit ? $customer_to_edit['first_name'] : '' ?>" required>
     </div>
     <div class="col-md-3">
         <label class="form-label">Last Name</label>
-        <input type="text" name="last_name" class="form-control" required>
+        <input type="text" name="last_name" class="form-control" value="<?= $editing && $customer_to_edit ? $customer_to_edit['last_name'] : '' ?>" required>
     </div>
     <div class="col-md-3">
         <label class="form-label">Phone Number</label>
-        <input type="text" name="phone_number" class="form-control" required>
+        <input type="text" name="phone_number" class="form-control" value="<?= $editing && $customer_to_edit ? $customer_to_edit['phone_number'] : '' ?>" required>
     </div>
     <div class="col-md-3">
-        <button type="submit" name="submit_customer" class="btn btn-dark w-100 h-100">Add Customer</button>
+        <button type="submit" name="<?= $editing ? 'update_customer' : 'submit_customer' ?>" class="btn btn-dark w-100 h-100">
+            <?= $editing ? 'Update Customer' : 'Add Customer' ?>
+        </button>
     </div>
+    <?php if($editing): ?>
+        <div class="col-md-12">
+            <a href="restaurant.php?page=customers" class="btn btn-secondary">Cancel</a>
+        </div>
+    <?php endif; ?>
 </form>
 
 <hr>
@@ -144,7 +168,7 @@ $page = $_GET['page'] ?? 'orders';
         <td><?= $customer['last_name']; ?></td>
         <td><?= $customer['phone_number']; ?></td>
         <td>
-            <a href="updaterestau.php?type=customer&id=<?= $customer['customer_id'] ?>" class="btn btn-warning btn-sm">Edit</a> |
+            <a href="restaurant.php?page=customers&edit=1&id=<?= $customer['customer_id'] ?>" class="btn btn-primary btn-sm">Edit</a>
             <a href="deleterestau.php?type=customer&id=<?= $customer['customer_id'] ?>" class="btn btn-danger btn-sm">Delete</a>
         </td>
     </tr>
@@ -193,7 +217,7 @@ $page = $_GET['page'] ?? 'orders';
         <td>₱<?= number_format($item['price'], 2); ?></td>
         <td><?= $item['category'];?></td>
         <td>
-            <a href="updaterestau.php?type=menuitem&id=<?= $item['item_id'] ?>" class="btn btn-warning btn-sm">Edit</a> |
+           |
             <a href="deleterestau.php?type=menuitem&id=<?= $item['item_id'] ?>" class="btn btn-danger btn-sm">Delete</a>
         </td>
     </tr>
