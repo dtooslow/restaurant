@@ -33,4 +33,7 @@ if(isset($_POST['update_menu_item'])){
     header("Location: restaurant.php?page=menuitems");
     exit();
 }
+
+
+
 ?>

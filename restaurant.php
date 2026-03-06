@@ -178,23 +178,48 @@ if($editing && isset($_GET['id'])) {
 
 <?php elseif($page == 'menuitems'): ?>
 
-<h4 class="mb-4">Add Menu Item</h4>
-<form method="POST" action="insertrestau.php" class="row g-3 align-items-end">
+<?php
+$editing = isset($_GET['edit']) ? true : false;
+$menuitem_to_edit = null;
+
+if($editing && isset($_GET['id'])) {
+    foreach($menuitems as $item) {
+        if($item['item_id'] == $_GET['id']) {
+            $menuitem_to_edit = $item;
+            break;
+        }
+    }
+}
+?>
+
+<h4 class="mb-4"><?= $editing ? 'Edit Menu Item' : 'Add Menu Item' ?></h4>
+<form method="POST" action="<?= $editing ? 'updaterestau.php' : 'insertrestau.php' ?>" class="row g-3 align-items-end">
+    <?php if($editing && $menuitem_to_edit): ?>
+        <input type="hidden" name="item_id" value="<?= $menuitem_to_edit['item_id'] ?>">
+    <?php endif; ?>
+    
     <div class="col-md-4">
         <label class="form-label">Dish Name</label>
-        <input type="text" name="dish_name" class="form-control" required>
+        <input type="text" name="dish_name" class="form-control" value="<?= $editing && $menuitem_to_edit ? $menuitem_to_edit['dish_name'] : '' ?>" required>
     </div>
     <div class="col-md-2">
         <label class="form-label">Price</label>
-        <input type="number" name="price" class="form-control" step="0.01" min="0" required>
+        <input type="number" name="price" class="form-control" step="0.01" min="0" value="<?= $editing && $menuitem_to_edit ? $menuitem_to_edit['price'] : '' ?>" required>
     </div>
     <div class="col-md-3">
         <label class="form-label">Category</label>
-        <input type="text" name="category" class="form-control" required>
+        <input type="text" name="category" class="form-control" value="<?= $editing && $menuitem_to_edit ? $menuitem_to_edit['category'] : '' ?>" required>
     </div>
     <div class="col-md-3">
-        <button type="submit" name="submit_menu_item" class="btn btn-dark w-100 h-100">Add Menu Item</button>
+        <button type="submit" name="<?= $editing ? 'update_menu_item' : 'submit_menu_item' ?>" class="btn btn-dark w-100 h-100">
+            <?= $editing ? 'Update Menu Item' : 'Add Menu Item' ?>
+        </button>
     </div>
+    <?php if($editing): ?>
+        <div class="col-md-12">
+            <a href="restaurant.php?page=menuitems" class="btn btn-secondary">Cancel</a>
+        </div>
+    <?php endif; ?>
 </form>
 
 <hr>
@@ -217,13 +242,13 @@ if($editing && isset($_GET['id'])) {
         <td>₱<?= number_format($item['price'], 2); ?></td>
         <td><?= $item['category'];?></td>
         <td>
-           |
+           <a href="restaurant.php?page=menuitems&edit=1&id=<?= $item['item_id'] ?>" class="btn btn-primary btn-sm">Edit</a> |
             <a href="deleterestau.php?type=menuitem&id=<?= $item['item_id'] ?>" class="btn btn-danger btn-sm">Delete</a>
         </td>
     </tr>
     <?php endforeach; ?>
     </tbody>
-</table>
+    </table>
 
 <?php endif; ?>
 
